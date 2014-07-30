@@ -8,7 +8,7 @@
   },
   "contributors": [],
   "dependencies": {
-    "mdns-js2": "0.0.4",
+    "mdns-js2": "0.0.5",
     "plist-with-patches": "0.5.1"
   },
   "keywords": [
