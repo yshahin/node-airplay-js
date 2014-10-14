@@ -37,7 +37,7 @@ Browser.prototype.init = function ( options ) {
     var mdnsBrowser = new mdns.Mdns(mdns.tcp('airport'));
     var legacyMdnsBrowser = new mdns.Mdns(mdns.tcp('airplay'));
 
-	var mdnsOnUpdate = function(data) {
+    var mdnsOnUpdate = function(data) {
         var info = data.addresses 
         var name = data.name
         /*
