@@ -1,7 +1,7 @@
 {
   "name": "airplay-js",
   "description": "JS Native Apple AirPlay client library for AppleTV",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "author": {
     "name": "zfkun",
     "email": "zfkun@msn.com"
@@ -22,7 +22,7 @@
   "main": "airplay.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/guerrerocarlos/node-airplay2.git"
+    "url": "git://github.com/guerrerocarlos/node-airplay-js.git"
   },
   "bugs": {
     "url": "https://github.com/zfkun/node-airplay/issues"
@@ -38,11 +38,5 @@
       "name": "Carlos Guerrero",
       "email": "npm@carlosguerrero.com"
     }
-  ],
-  "readme": "node-airplay \n=================\n\nnode-airplay is a native javascript client library for Apple's AirPlay remote playback protocol.\n\n## Installation\n\nFrom npm:\n\n\tnpm intall airplay-js\n\n## Usage\n\n``` javascript\n// remote video\nvar browser = require( 'airplay2' ).createBrowser();\nbrowser.on( 'deviceOn', function( device ) {\n    device.play( 'http://remotehost/video.mp4', 0, function() {\n        console.info( 'video playing...' );\n    });\n});\nbrowser.start();\n```\n\n\n## Help\n\n+ [Unofficial AirPlay Protocol Specification](http://nto.github.io/AirPlay.html)\n+ [HLS(HTTP Live Streaming)](http://tools.ietf.org/html/draft-pantos-http-live-streaming-12)\n+ [ffmpeg build for ios](http://www.cocoachina.com/bbs/read.php?tid=142628&page=1)\n+ [ffmpeg build for MacOS](http://trac.ffmpeg.org/wiki/MacOSXCompilationGuide#Shortcut:CompileFFmpegthroughHomebrew)\n+ [mdns User Guide](http://agnat.github.io/node_mdns/user_guide.html)\n\n\n## API\n\n+ [Browser](https://github.com/zfkun/node-airplay/wiki/Browser-API)\n+ [Device](https://github.com/zfkun/node-airplay/wiki/Device-API)\n+ [Client](https://github.com/zfkun/node-airplay/wiki/Client-API)\n+ [HLS](https://github.com/zfkun/node-airplay/wiki/HLS-API)\n\n",
-  "readmeFilename": "README.md",
-  "_id": "airplay-js@0.2.3",
-  "_shasum": "3a7f132792205f15db5bc452bc1d5519ed4bf9e1",
-  "_from": "https://github.com/guerrerocarlos/node-airplay2/tarball/master",
-  "_resolved": "https://github.com/guerrerocarlos/node-airplay2/tarball/master"
+  ]
 }
