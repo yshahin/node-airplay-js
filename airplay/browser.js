@@ -34,10 +34,13 @@ Browser.prototype.init = function ( options ) {
 
     this.devices = {};
 
-    var mdnsBrowser = new mdns.Mdns(mdns.tcp('airport'));
-    var legacyMdnsBrowser = new mdns.Mdns(mdns.tcp('airplay'));
+    var mdnsBrowser = new mdns.Mdns(mdns.tcp('airplay'));
 
-    var mdnsOnUpdate = function(data) {
+    mdnsBrowser.on('ready', function () {
+            mdnsBrowser.discover()
+    });
+
+    mdnsBrowser.on( 'update', function(data) {
         var info = data.addresses 
         var name = data.name
         /*
@@ -60,18 +63,7 @@ Browser.prototype.init = function ( options ) {
         });
 
         self.devices[ device.id ] = device;
-    };
-
-    mdnsBrowser.on('ready', function () {
-            mdnsBrowser.discover();
     });
-   
-    legacyMdnsBrowser.on('ready', function () {
-            legacyMdnsBrowser.discover();
-    });
-
-    mdnsBrowser.on('update', mdnsOnUpdate);
-    legacyMdnsBrowser.on('update', mdnsOnUpdate);
     /*
     this.browser.on( 'serviceDown', function( info ) {
         if ( !self.isValid( info ) ) {
