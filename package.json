@@ -1,14 +1,14 @@
 {
   "name": "airplay-js",
   "description": "JS Native Apple AirPlay client library for AppleTV",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "author": {
     "name": "zfkun",
     "email": "zfkun@msn.com"
   },
   "contributors": [],
   "dependencies": {
-    "mdns-js": "shahriman/node-mdns-js",
+    "mdns-js": "guerrerocarlos/node-mdns-js",
     "plist-with-patches": "0.5.1"
   },
   "keywords": [
