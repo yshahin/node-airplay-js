@@ -34,7 +34,7 @@ function HLSServer( options ) {
         ops.lib = '';   
     }
     // TS分片输出目录
-    ops.out = path.normalize( ops.out || ( __dirname + '/../out' ) ) + '/';
+    ops.out = path.normalize( ops.out || ( '/tmp' ) ) + '/';
     if ( !fs.existsSync( ops.out ) ) {
         fs.mkdirSync( ops.out );
     }
@@ -57,6 +57,9 @@ HLSServer.prototype.start = function ( port ) {
 
         this.emit( 'start', { host: IP_LOCAL, port: port } );
     }
+
+    this.port = port
+    this.address = IP_LOCAL
 
     return this;
 };
@@ -89,6 +92,12 @@ HLSServer.prototype.getURI = function ( type, index ) {
         return this.baseURI;
     }
 };
+
+HLSServer.prototype.setSubtitles = function( subtitles ){
+    var self = this 
+    self.subtitles = subtitles
+    console.log("TODO: Setting up subtitles for streaming...")
+}
 
 HLSServer.prototype.open = function ( fileFullPath, callback ) {
     var self = this;
@@ -150,7 +159,7 @@ HLSServer.prototype.segment = function ( index, req, res ) {
     var outfile = this.options.out + index + '.ts';
 
     // skip if exists
-    if ( fs.existsSync( outfile ) ) {
+    if ( fs.existsSync( outfile ) && false) {
         fs.createReadStream( outfile ).pipe( res );
         return;
     }
@@ -246,15 +255,20 @@ HLSServer.prototype.httpHandler = function ( request, response ) {
     var header = {};
     var body = [];
     var uri = url.parse( request.url, true );
+    var self = this 
 
     this.emit( 'request', request );
 
     if ( uri.pathname === '/' ) {
         body.push( '#EXTM3U' );
         body.push( '#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID="audio",LANGUAGE="und",NAME="Original Audio",DEFAULT=YES,AUTOSELECT=YES' );
+        this.subtitles.forEach(function(each){
+            body.push( '#EXT-X-MEDIA:TYPE=SUBTITLES,GROUP-ID="subs",NAME="English",DEFAULT=YES,AUTOSELECT=YES,FORCED=NO,LANGUAGE="en",URI="http://'+self.address+':'+self.port+'/subtitles/'+each.language+'.m3u8"' )
+        })
+        //body.push( '#EXT-X-MEDIA:TYPE=SUBTITLES,GROUP-ID="subs",NAME="Spanish",DEFAULT=NO,AUTOSELECT=NO,FORCED=YES,LANGUAGE="en",URI="http://carlosguerrero.com/b.m3u8"' )
 
         // stream#0
-        body.push( '#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=20000000,CODECS="mp4a.40.2,avc1.640028",AUDIO="audio"' );
+        body.push( '#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=20000000,CODECS="mp4a.40.2,avc1.640028",AUDIO="audio",SUBTITLES="subs"' );
         body.push( this.getURI( 'video' ) );
 
         // // stream#1
@@ -336,12 +350,32 @@ HLSServer.prototype.httpHandler = function ( request, response ) {
 
         var tsIndex = parseInt( path.basename( uri.pathname, '.ts' ), 10 );
         this.segment( tsIndex, request, response );
-
         this.emit( 'stream', tsIndex, this.segmentSize );
-
         // fs.createReadStream( filePath ).pipe( response );
         // response.write( fs.readFileSync( filePath ) );
         // response.end();
+    } else if ( /^\/subtitles/.test(uri.pathname) ){
+
+        var selected = uri.pathname.substring(11,uri.pathname.length)
+
+        body = []
+        response.write('#EXTM3U\n')
+        response.write('#EXT-X-TARGETDURATION:30\n')
+        response.write('#EXT-X-VERSION:3\n')
+        response.write('#EXT-X-MEDIA-SEQUENCE:1\n')
+        response.write('#EXT-X-PLAYLIST-TYPE:VOD\n')
+
+        this.subtitles.forEach(function(each){
+            console.log(each)
+            if( selected.indexOf(each.language)>-1 ){
+                response.write('#EXTINF:30.0,\n')
+                response.write(each.url+'\n')
+            }
+        });
+        response.write('#EXT-X-ENDLIST\n')
+
+        body = ""
+        response.end();
     } else {
         response.writeHead( 404 );
         response.end();

@@ -1,7 +1,7 @@
 {
   "name": "airplay-js",
   "description": "JS Native Apple AirPlay client library for AppleTV",
-  "version": "0.2.4",
+  "version": "0.2.6",
   "author": {
     "name": "zfkun",
     "email": "zfkun@msn.com"
@@ -19,24 +19,5 @@
     "hls",
     "ffmpeg"
   ],
-  "main": "airplay.js",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/guerrerocarlos/node-airplay-js.git"
-  },
-  "bugs": {
-    "url": "https://github.com/zfkun/node-airplay/issues"
-  },
-  "homepage": "https://github.com/zfkun/node-airplay",
-  "_npmVersion": "1.4.3",
-  "_npmUser": {
-    "name": "zfkun",
-    "email": "zfkun@msn.com"
-  },
-  "maintainers": [
-    {
-      "name": "Carlos Guerrero",
-      "email": "npm@carlosguerrero.com"
-    }
-  ]
+  "main": "airplay.js"
 }

@@ -237,7 +237,7 @@ Client.prototype.playbackInfo = function ( callback ) {
 };
 
 // position: 0 ~ 1
-Client.prototype.play = function ( src, position, callback ) {
+Client.prototype.simpleplay = function ( src, position, callback ) {
     var body = [
         'Content-Location: ' + src,
         'Start-Position: ' + (position || 0)
