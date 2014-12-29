@@ -1,6 +1,6 @@
 /**
  * node-airplay
- * 
+ *
  * @file airplay device
  * @author zfkun(zfkun@msn.com)
  * @thanks https://github.com/benvanik/node-airplay/blob/master/lib/airplay/device.js
@@ -24,7 +24,7 @@ function Device ( id, info, name, callback ) {
 
     this.client = new Client(
         {
-            host: info[0], port: 7000 
+            host: info[0], port: 7000
             // ,user: 'zfkun', pass: ''
         },
         function () {
@@ -116,7 +116,7 @@ Device.prototype.getInfo = function() {
         interfaceName: info.networkInterface,
         interfaceIndex: info.interfaceIndex,
         addresses: info.addresses,
-        
+
         flags: txtRecord.flags,
         pk: txtRecord.pk,
 
@@ -140,24 +140,27 @@ Device.prototype.play = function(media, position, callback){
     if (typeof(media) != 'string'){
         self.hls.setSubtitles(media.subtitles)
         media = media.file
-    } 
+    }
 
     console.log("going to play: "+media)
-    self.hls.open( media , function ( info ) {
-        device.simpleplay( self.hls.getURI(), '0.000000', function ( res ) {
-            console.info( '->> ', res );
-            setTimeout(function(){
-                device.status( function ( info ) {
-                    console.info( '->> ', info ? info : 'no info >(' );
-                    if ( info ) {
-                        console.log(info)
-                    }
-                });
-            }, 4000);
+    try{
+        self.hls.open( media , function ( info ) {
+            device.simpleplay( self.hls.getURI(), '0.000000', function ( res ) {
+                console.info( '->> ', res );
+                setTimeout(function(){
+                    device.status( function ( info ) {
+                        console.info( '->> ', info ? info : 'no info >(' );
+                        if ( info ) {
+                            console.log(info)
+                        }
+                    });
+                }, 4000);
+            });
         });
-    });
+    }catch(e){
+        self.simpleplay(media, position, callback);
+    }
 
-    //self.simpleplay(media, position, callback);
 };
 
 

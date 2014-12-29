@@ -31,15 +31,18 @@ Browser.prototype.init = function ( options ) {
     var nextDeviceId = 0;
 
     this.devices = {};
+    this.addresses = []
 
     //var mdnsBrowser = new mdns.Mdns(mdns.tcp('airport'));
     var browser = new mdns.createBrowser(mdns.tcp('airplay'));
     //var legacyMdnsBrowser = new mdns.Mdns(mdns.tcp('airplay'));
 
     var mdnsOnUpdate = function(data) {
-        if(data.port && data.port == 7000){
+        if(data.port && data.port == 7000 && self.addresses.indexOf(data.addresses[0]) < 0){
             var info = data.addresses
             var name = data.type[0].name
+            self.addresses.push(data.addresses[0])
+            console.log(data)
             /*
             if ( !self.isValid( info ) ) {
                 return;

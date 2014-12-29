@@ -1,6 +1,6 @@
 /**
  * node-airplay
- * 
+ *
  * @file HTTP Live Streaming
  * @author zfkun(zfkun@msn.com)
  */
@@ -31,7 +31,7 @@ function HLSServer( options ) {
     // 编解码库目录
     ops.lib = path.normalize( ops.lib || ( __dirname + '/../dep' ) ) + '/';
     if ( !fs.existsSync( ops.lib ) ) {
-        ops.lib = '';   
+        ops.lib = '';
     }
     // TS分片输出目录
     ops.out = path.normalize( ops.out || ( '/tmp' ) ) + '/';
@@ -94,9 +94,8 @@ HLSServer.prototype.getURI = function ( type, index ) {
 };
 
 HLSServer.prototype.setSubtitles = function( subtitles ){
-    var self = this 
+    var self = this
     self.subtitles = subtitles
-    console.log("TODO: Setting up subtitles for streaming...")
 }
 
 HLSServer.prototype.open = function ( fileFullPath, callback ) {
@@ -108,10 +107,18 @@ HLSServer.prototype.open = function ( fileFullPath, callback ) {
 
     this.file = fileFullPath;
 
+    console.log(this.options.lib+'ffprobe')
+    console.log(this.command4FFProbe(this.file))
+
+
+
     this.openThread = spawn(
         this.options.lib + 'ffprobe',
-        this.command4FFProbe( this.file )
+        this.command4FFProbe( this.file ), function(a){
+            console.log("finished!")
+        }
     );
+    console.log(e)
 
     var output = '';
     this.openThread.stdout.on( 'data', function ( chunk ) {
@@ -255,7 +262,7 @@ HLSServer.prototype.httpHandler = function ( request, response ) {
     var header = {};
     var body = [];
     var uri = url.parse( request.url, true );
-    var self = this 
+    var self = this
 
     this.emit( 'request', request );
 
@@ -277,7 +284,7 @@ HLSServer.prototype.httpHandler = function ( request, response ) {
 
         // // frames
         // body.push( '#EXT-X-I-FRAME-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=20000000,CODECS="avc1.640028",URI="/iframes.m3u8"' );
-        
+
         body.push( '#EXT-X-ENDLIST' );
         body = body.join( '\n' );
 
@@ -335,7 +342,7 @@ HLSServer.prototype.httpHandler = function ( request, response ) {
 
     //     body.push( '#EXTINF:3.000000000000000,' );
     //     body.push( '#EXT-X-BYTERANGE:2097152@564' );
-        
+
     //     body.push( '/iframes/0.ts' );
     //     body.push( '#EXTINF:3.000000000000000,' );
     //     body.push( '#EXT-X-BYTERANGE:2097152@564' );

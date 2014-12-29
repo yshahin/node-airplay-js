@@ -33,7 +33,7 @@ browser.on( 'deviceOn', function( device ) {
     hls.start( 7001 );
 
 
-    hls.open( '/Users/guerrerocarlos/Desktop/a.mp4', function ( info ) {
+    hls.open( '/Users/carlos/Desktop/a.mp4', function ( info ) {
 
         device.simpleplay( hls.getURI(), '0.000000', function ( res ) {
             console.info( '开始播放啦: ', res );
