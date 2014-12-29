@@ -107,57 +107,58 @@ HLSServer.prototype.open = function ( fileFullPath, callback ) {
 
     this.file = fileFullPath;
 
-    console.log(this.options.lib+'ffprobe')
-    console.log(this.command4FFProbe(this.file))
-
-
-
-    this.openThread = spawn(
-        this.options.lib + 'ffprobe',
-        this.command4FFProbe( this.file ), function(a){
-            console.log("finished!")
+    self.checkFirst = spawn('whereis',['ffprobe'])
+    self.checkFirst.on('close', function(data){
+        console.log("x:"+data)
+        if(data==0){
+            console.log("No FFMPEG FOUND :(")
+            self.emit("NoFFMPEG")
+            return 0;
         }
-    );
-    console.log(e)
-
-    var output = '';
-    this.openThread.stdout.on( 'data', function ( chunk ) {
-        output += chunk;
-    });
-    this.openThread.stderr.on( 'data', function ( err ) {
-        self.emit(
-            'error',
-            { type: 'open', err: err, file: fileFullPath }
-        );
-    });
-    this.openThread.stdout.on( 'end', function () {
-        var json;
-        try {
-            json = JSON.parse( output );
-        } catch (e) {
-            self.emit(
-                'error',
-                { type: 'open', err: e.message, file: fileFullPath }
+    })
+    self.checkFirst.stdout.on('data', function(data){
+        console.log("d:"+data)
+        if(data.length >0){
+            self.openThread = spawn(
+                self.options.lib + 'ffprobe',
+                self.command4FFProbe( self.file ), function(a){
+                    console.log("finished!")
+                }
             );
+            var output = '';
+            self.openThread.stdout.on( 'data', function ( chunk ) {
+                output += chunk;
+            });
+            self.openThread.stderr.on( 'data', function ( err ) {
+                self.emit(
+                    'error',
+                    { type: 'open', err: err, file: fileFullPath }
+                );
+            });
+            self.openThread.stdout.on( 'end', function () {
+                var json;
+                try {
+                    json = JSON.parse( output );
+                } catch (e) {
+                    self.emit(
+                        'error',
+                        { type: 'open', err: e.message, file: fileFullPath }
+                    );
+                }
+                if ( json ) {
+                    self.videoInfo = json;
+                    // update store
+                    self.segmentSize = Math.ceil( parseFloat( json.format.duration, 10 ) / self.options.duration );
+                    self.emit( 'open', { file: fileFullPath, info: json } );
+                }
+                if ( callback ) {
+                    callback( json );
+                }
+                self.openThread = null;
+            });
+            return self;
         }
-
-        if ( json ) {
-            self.videoInfo = json;
-
-            // update store
-            self.segmentSize = Math.ceil( parseFloat( json.format.duration, 10 ) / self.options.duration );
-
-            self.emit( 'open', { file: fileFullPath, info: json } );
-        }
-
-        if ( callback ) {
-            callback( json );
-        }
-
-        self.openThread = null;
-    });
-
-    return this;
+    })
 };
 
 
