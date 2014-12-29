@@ -18,7 +18,7 @@ var media = {
         title: 'Big Bug Bunny',
         url: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg'
     },
-    subtitles_style: { 
+    subtitles_style: {
           backgroundColor: '#FFFFFFFF', // see http://dev.w3.org/csswg/css-color/#hex-notation
           foregroundColor: '#000FFFF', // see http://dev.w3.org/csswg/css-color/#hex-notation
           edgeType: 'DROP_SHADOW', // can be: "NONE", "OUTLINE", "DROP_SHADOW", "RAISED", "DEPRESSED"
@@ -34,7 +34,7 @@ var media = {
 }
 
 browser.on( 'deviceOn', function( device ) {
-    device.play(media , 0, function() {
+    device.simpleplay(media , 0, function() {
         console.info( 'video playing...' );
     });
 });
