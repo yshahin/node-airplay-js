@@ -113,6 +113,7 @@ HLSServer.prototype.open = function ( fileFullPath, callback ) {
         if(data==0){
             console.log("No FFMPEG FOUND :(")
             self.emit("NoFFMPEG")
+            throw new Error("No FFMPEG binary available.")
             return 0;
         }
     })

@@ -40,9 +40,8 @@ Browser.prototype.init = function ( options ) {
     var mdnsOnUpdate = function(data) {
         if(data.port && data.port == 7000 && self.addresses.indexOf(data.addresses[0]) < 0){
             var info = data.addresses
-            var name = data.type[0].name
+            var name = data.fullname
             self.addresses.push(data.addresses[0])
-            console.log(data)
             /*
             if ( !self.isValid( info ) ) {
                 return;

@@ -158,6 +158,7 @@ Device.prototype.play = function(media, position, callback){
             });
         });
     }catch(e){
+        console.log("f: "+e)
         self.simpleplay(media, position, callback);
     }
 
