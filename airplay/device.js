@@ -143,7 +143,6 @@ Device.prototype.play = function(media, position, callback){
     }
 
     console.log("going to play: "+media)
-    try{
         self.hls.open( media , function ( info ) {
             device.simpleplay( self.hls.getURI(), '0.000000', function ( res ) {
                 console.info( '->> ', res );
@@ -157,9 +156,10 @@ Device.prototype.play = function(media, position, callback){
                 }, 4000);
             });
         });
-    }catch(e){
-        console.log("f: "+e)
-        self.simpleplay(media, position, callback);
+
+        self.hls.on('NoFFMPEG', function(){
+            self.simpleplay(media, position, callback);
+        })
     }
 
 };
