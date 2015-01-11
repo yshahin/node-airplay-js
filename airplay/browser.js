@@ -75,6 +75,9 @@ Browser.prototype.init = function ( options ) {
 
     browser.on('ready', function () {
             browser.discover();
+            setInterval(function(){
+                browser.discover();
+            },3000)
     });
 
     //mdnsBrowser.on('update', mdnsOnUpdate);
