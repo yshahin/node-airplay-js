@@ -143,24 +143,22 @@ Device.prototype.play = function(media, position, callback){
     }
 
     console.log("going to play: "+media)
-        self.hls.open( media , function ( info ) {
-            device.simpleplay( self.hls.getURI(), '0.000000', function ( res ) {
-                console.info( '->> ', res );
-                setTimeout(function(){
-                    device.status( function ( info ) {
-                        console.info( '->> ', info ? info : 'no info >(' );
-                        if ( info ) {
-                            console.log(info)
-                        }
-                    });
-                }, 4000);
-            });
+    self.hls.open( media , function ( info ) {
+        device.simpleplay( self.hls.getURI(), '0.000000', function ( res ) {
+            console.info( '->> ', res );
+            setTimeout(function(){
+                device.status( function ( info ) {
+                    console.info( '->> ', info ? info : 'no info >(' );
+                    if ( info ) {
+                        console.log(info)
+                    }
+                });
+            }, 4000);
         });
-
-        self.hls.on('NoFFMPEG', function(){
-            self.simpleplay(media, position, callback);
-        })
-    }
+    });
+    self.hls.on('NoFFMPEG', function(){
+        self.simpleplay(media, position, callback);
+    })
 
 };
 
