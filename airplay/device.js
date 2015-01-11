@@ -158,6 +158,7 @@ Device.prototype.play = function(media, position, callback){
     });
     self.hls.on('NoFFMPEG', function(){
         self.simpleplay(media, position, callback);
+        self.emit('NoFFMPEG')
     })
 
 };
