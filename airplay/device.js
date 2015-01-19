@@ -136,7 +136,7 @@ Device.prototype.play = function(media, position, callback){
     //#TODO: Check if has ffmpeg and if not, go directly to simpleplay
     //
     console.log(typeof(media))
-    self.hls.start( 7001 );
+    self.hls.start( 7001 + this.id );
     if (typeof(media) != 'string'){
         self.hls.setSubtitles(media.subtitles)
         media = media.file

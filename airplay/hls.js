@@ -106,11 +106,13 @@ HLSServer.prototype.open = function ( fileFullPath, callback ) {
     }
 
     this.file = fileFullPath;
-
-    self.checkFirst = spawn('whereis',['ffprobe'])
+    
+    var whichCommand = /^win/.test(process.platform) ? 'where' : 'which'
+    
+    self.checkFirst = spawn(whichCommand,['ffprobe'])
     self.checkFirst.on('close', function(data){
         console.log("x:"+data)
-        if(data==0){
+        if(data!=0){
             console.log("No FFMPEG FOUND :(")
             self.emit("NoFFMPEG")
             return 0;
@@ -118,6 +120,22 @@ HLSServer.prototype.open = function ( fileFullPath, callback ) {
     })
     self.checkFirst.stdout.on('data', function(data){
         console.log("d:"+data)
+        
+        // # -------------------------------------------------- # //
+        // TODO: find the ffmpeg path when the object is constructed instead of resolving it now.
+        // PATCH to actually find the ffmpeg executable
+        var ffmpegPath = data.toString("utf8").trim()
+        if(data.length > 0 && fs.existsSync(ffmpegPath)) {
+            var ffmpegPath = path.dirname(ffmpegPath) + path.sep
+            if(self.options.lib != ffmpegPath) {
+                self.options.lib = ffmpegPath
+                console.log("FFMPEG path set to " + ffmpegPath)
+            }
+        } else {
+            return; // We assume that which will return != 0 so on('close') will handle the NoFFMPEG case.
+        }
+        // # -------------------------------------------------- # //
+        
         if(data.length >0){
             self.openThread = spawn(
                 self.options.lib + 'ffprobe',
