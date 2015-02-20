@@ -8,7 +8,6 @@
   },
   "contributors": [],
   "dependencies": {
-    "asyncblock": "^2.1.23",
     "mdns-js": "guerrerocarlos/node-mdns-js",
     "plist-with-patches": "0.5.1"
   },
